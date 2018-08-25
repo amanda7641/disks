@@ -1,0 +1,5 @@
+__pycache__
+.DS_Store
+overlapData.py
+overlapData.dat 
+allOverlap.dat
