@@ -44,7 +44,7 @@ class XYGame:
                         xyList.append("y")
                     else:
                         xyList.append("x")
-            if xyList.count("y") >= 2:
+            if xyList[0] == "y" and xyList.count("y") >= 2:
                 tooManyYTest = True
                 break
             xyFullList.append(xyList)
