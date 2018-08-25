@@ -9,12 +9,9 @@ class XYGame:
         self.numberOfDisks = numberOfDisks
         self.diskChoices = diskChoices
         self.orientationConfigurations = orientationConfigurations
-        #list of special disks that do not follow configuration if/else rules
-        #then the special rules need to be added to singleConfigurationXY function
 
-
-    #this will not be used at the moment since a list is being passed in
-    #get overlap data from file
+    #This function is not currently used since a list is being passed in instead of a .dat file
+    #Read overlap data from file
     def readOverlapFile(self, overlapData):
         text_file = open(overlapData, "r")
         lines = text_file.read().splitlines()
@@ -29,7 +26,7 @@ class XYGame:
             overlapData.append(overlapItems)
         return overlapData
 
-    #function to test one configuration
+    #Tests one configuration to see if it works
     def singleConfigurationXY(self, configuration, overlapData):
         xyFullList = []
         tooManyYTest = False
@@ -55,7 +52,7 @@ class XYGame:
             return None
         return xyFullList
 
-    #loop through all configurations
+    #Loop through all configurations to test using singleConfigurationXY function
     def allConfigurationsXY(self, configurations, overlapData):
         configurationPairingList = []
         for configuration in configurations:
@@ -66,14 +63,14 @@ class XYGame:
                 configurationPairingList.append((configuration, xyList))
         return configurationPairingList
 
-    #print the pairings of configurations that work and the xy list
+    #Print the pairings of configurations that work and the xy list to go with the configuration
     def printAllConfigurationsXY(self, list):
         for item in list:
             print("Configuration: " + str(item[0]) + ", XYList: " + str(item[1]))
 
     def play(self):
-        #do not need to read overlap file unless we change back to overlap file instead of list
-        #overlapData = self.readOverlapFile(self.overlapData)
+        #A change can be made here if you wish to go back to reading an overlap .dat file
+            #overlapData = self.readOverlapFile(self.overlapData)
         overlapData = self.overlapData
         print("Overlap Data: " + str(self.overlapData))
         print()
@@ -84,6 +81,7 @@ class XYGame:
         self.printAllConfigurationsXY(XYList)
         print("Number of working configuration: " + str(len(XYList)))
 
+    #Play the XYGame, but instead of printing results return the XYList
     def getXYList(self):
         overlapData = self.overlapData
         XYList = self.allConfigurationsXY(self.orientationConfigurations, self.overlapData)
