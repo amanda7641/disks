@@ -40,6 +40,7 @@ orientationConfigurations = list(itertools.product([0,1], repeat=disks))
 myNumbers = range(p*q)
 myList = list(itertools.combinations(myNumbers, disks))
 
+
 #Loop through all disk choices to play xygame for each choice
 hasConfiguration = []
 for sortedDiskNumbers in myList:
