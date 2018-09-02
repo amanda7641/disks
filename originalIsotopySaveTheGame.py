@@ -30,39 +30,29 @@ numberOfDiskChoices = len(diskChoices)
 orientationConfigurations = list(itertools.product([0,1], repeat=disks))
 #In the above configurations: 1 is positive, 0 is negative
 
+if p >= 4 and q >=5:
+    orientationConfigurations.remove(tuple([0]*disks))
+    orientationConfigurations.remove(tuple([1]*disks))
+
+
 filename = str(p)+","+str(q)+"_xyResults"
 file = open(filename,"w+")
 
+#Prune overlapData rows based on sortedDiskNumbers and pairs from each row with a number that is not in sortedDiskNumbers
+def prune(myOverlapData, diskChoice):
+    prunedOverlapData = []
+    for overlapDataItem in myOverlapData:
+        if diskChoice.count(overlapDataItem[0][0]) > 0:
+            prunedOverlapDataItem = []
+            for pair in overlapDataItem:
+                if diskChoice.count(pair[0]) > 0:
+                    prunedOverlapDataItem.append(pair)
+            prunedOverlapData.append(prunedOverlapDataItem)
+    return prunedOverlapData
+
 count = 0
 for diskChoice in diskChoices:
-    prunedOnceOverlapData= []
-
-    #Prune overlapData rows based on sortedDiskNumbers and pairs from each row with a number that is not in sortedDiskNumbers
-    # itemCount = 0
-    # while itemCount < len(prunedOverlapData):
-    #     if diskChoice.count(prunedOverlapData[itemCount][0][0]) <= 0:
-    #         prunedOverlapData.remove(prunedOverlapData[itemCount])
-    #         itemCount = itemCount - 1
-    #     else:
-    #         pairCount = 0
-    #         while pairCount < len(prunedOverlapData[itemCount]):
-    #             if diskChoice.count(prunedOverlapData[itemCount][pairCount][0]) <= 0:
-    #                 prunedOverlapData[itemCount].remove(prunedOverlapData[itemCount][pairCount])
-    #                 pairCount = pairCount - 1
-    #             pairCount = pairCount + 1
-    #     itemCount = itemCount + 1
-
-    for overlapDataItem in overlapData:
-        if diskChoice.count(overlapDataItem[0][0]) > 0:
-            prunedOnceOverlapData.append(overlapDataItem)
-    
-    prunedOverlapData = []
-    for overlapDataItem in prunedOnceOverlapData:
-        prunedOverlapDataItem = []
-        for pair in overlapDataItem:
-            if diskChoice.count(pair[0]) > 0:
-                prunedOverlapDataItem.append(pair)
-        prunedOverlapData.append(prunedOverlapDataItem)
+    prunedOverlapData = prune(overlapData, diskChoice)
 
     print(diskChoice)
     print("Overlap Data: " + str(prunedOverlapData))

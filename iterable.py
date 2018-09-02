@@ -26,7 +26,7 @@ for i in range(1,p*q+1):
     else:
         overlapData.append([(i%(p*q),'l'),((i+q)%(p*q),'r'),((i+q-1)%(p*q),'r')])
         overlapData.append([(i%(p*q),'r'),((i-1)%(p*q),'r'),((i-q)%(p*q),'l'),((i-q+1)%(p*q),'l'),((i+1)%(p*q),'r')])
-    
+overlapDataTuple = tuple(overlapData)
 
 
 
@@ -40,39 +40,31 @@ orientationConfigurations = list(itertools.product([0,1], repeat=disks))
 myNumbers = range(p*q)
 myList = list(itertools.combinations(myNumbers, disks))
 
+#Prune overlapData rows based on sortedDiskNumbers and pairs from each row with a number that is not in sortedDiskNumbers
+def prune(myOverlapData, diskChoice):
+    prunedOverlapData = []
+    for overlapDataItem in myOverlapData:
+        if diskChoice.count(overlapDataItem[0][0]) > 0:
+            prunedOverlapDataItem = []
+            for pair in overlapDataItem:
+                if diskChoice.count(pair[0]) > 0:
+                    prunedOverlapDataItem.append(pair)
+            prunedOverlapData.append(prunedOverlapDataItem)
+    return prunedOverlapData
 
 #Loop through all disk choices to play xygame for each choice
 hasConfiguration = []
 for sortedDiskNumbers in myList:
-    #Prune overlapData rows based on sortedDiskNumbers and pairs from each row with a number that is not in sortedDiskNumbers
-    itemCount = 0
-    while itemCount < len(prunedOverlapData):
-        if sortedDiskNumbers.count(prunedOverlapData[itemCount][0][0]) <= 0:
-            prunedOverlapData.remove(prunedOverlapData[itemCount])
-            itemCount = itemCount - 1
-        else:
-            pairCount = 0
-            while pairCount < len(prunedOverlapData[itemCount]):
-                if sortedDiskNumbers.count(prunedOverlapData[itemCount][pairCount][0]) <= 0:
-                    prunedOverlapData[itemCount].remove(prunedOverlapData[itemCount][pairCount])
-                    pairCount = pairCount - 1
-                pairCount = pairCount + 1
-        itemCount = itemCount + 1
-                
+    prunedOverlapData = prune(overlapData, sortedDiskNumbers)
+    print(str(sortedDiskNumbers) + ", overlap: " + str(prunedOverlapData))
     game = xygame.XYGame(p,q,prunedOverlapData,len(sortedDiskNumbers),sortedDiskNumbers, orientationConfigurations)
     xyList = game.getXYList()
-    if len(xyList):
+    if xyList:
         configs = []
         for config in xyList:
             configs.append(config[0])
         hasConfiguration.append((sortedDiskNumbers, configs))
-        print((sortedDiskNumbers, configs))
-print("Number of configurqations that work: " + str(len(hasConfiguration)))
-
 for configuration in hasConfiguration:
     print(configuration)
-
+print("Number of configurations that work: " + str(len(hasConfiguration)))
 print("Runtime: " + str(datetime.now()-startTime))
-
-
-
