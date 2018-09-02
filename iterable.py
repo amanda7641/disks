@@ -46,20 +46,20 @@ hasConfiguration = []
 for sortedDiskNumbers in myList:
     #Prune overlapData rows based on sortedDiskNumbers and pairs from each row with a number that is not in sortedDiskNumbers
     itemCount = 0
-    while itemCount < len(overlapData):
-        if sortedDiskNumbers.count(overlapData[itemCount][0][0]) <= 0:
-            overlapData.remove(overlapData[itemCount])
+    while itemCount < len(prunedOverlapData):
+        if sortedDiskNumbers.count(prunedOverlapData[itemCount][0][0]) <= 0:
+            prunedOverlapData.remove(prunedOverlapData[itemCount])
             itemCount = itemCount - 1
         else:
             pairCount = 0
-            while pairCount < len(overlapData[itemCount]):
-                if sortedDiskNumbers.count(overlapData[itemCount][pairCount][0]) <= 0:
-                    overlapData[itemCount].remove(overlapData[itemCount][pairCount])
+            while pairCount < len(prunedOverlapData[itemCount]):
+                if sortedDiskNumbers.count(prunedOverlapData[itemCount][pairCount][0]) <= 0:
+                    prunedOverlapData[itemCount].remove(prunedOverlapData[itemCount][pairCount])
                     pairCount = pairCount - 1
                 pairCount = pairCount + 1
         itemCount = itemCount + 1
                 
-    game = xygame.XYGame(p,q,overlapData,len(sortedDiskNumbers),sortedDiskNumbers, orientationConfigurations)
+    game = xygame.XYGame(p,q,prunedOverlapData,len(sortedDiskNumbers),sortedDiskNumbers, orientationConfigurations)
     xyList = game.getXYList()
     if len(xyList):
         configs = []
