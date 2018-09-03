@@ -35,7 +35,7 @@ numberOfDiskChoices = len(diskChoices)
 orientationConfigurations = list(itertools.product([0,1], repeat=disks))
 #In the above configurations: 1 is positive, 0 is negative
 
-filename = str(p)+","+str(q)+"_xyResults_New_Isotopy"
+filename = str(p)+","+str(q)+"_xyResults_New_Isotopy_FullGame"
 file = open(filename,"w+")
 
 #Prune overlapData rows based on sortedDiskNumbers and pairs from each row with a number that is not in sortedDiskNumbers
@@ -51,6 +51,7 @@ def prune(myOverlapData, diskChoice):
     return prunedOverlapData
 
 count = 0
+configurationsCount = 0
 for diskChoice in diskChoices:
     prunedOverlapData = prune(overlapData, diskChoice)
     configurationsList = []
@@ -75,14 +76,55 @@ for diskChoice in diskChoices:
         if tooManyYTest:
             continue
         else:
-            configurationsList.append(configuration)
+            thisDoesNotWork = False
+            matrixForm = [[0 for col in range(q)]for row in range(p)]
+            configurationCounter = 0 #Use to track which index in configuration we should be using
+            #While placing a 1 (negative) or 2 (positive) into the matrix, check whether any surrounding places in the matrix cause a problem
+            for disk in diskChoice:
+                newValue = matrixForm[disk[0]][disk[1]] + configuration[configurationCounter] + 1
+                matrixForm[disk[0]][disk[1]] = newValue
+                if newValue == 2 and (matrixForm[disk[0]][(disk[1]+1)%q]==1 or matrixForm[(disk[0]-1)%p][disk[1]]==1 or matrixForm[(disk[0]-1)%p][(disk[1]-1)%q]==2 or matrixForm[(disk[0]+1)%p][(disk[1]+1)%q]==2):
+                    thisDoesNotWork = True
+                    break
+                if newValue == 1 and (matrixForm[disk[0]][(disk[1]-1)%q]==2 or matrixForm[(disk[0]+1)%p][disk[1]]==2 or matrixForm[(disk[0]-1)%p][(disk[1]-1)%q]==1 or matrixForm[(disk[0]+1)%p][(disk[1]+1)%q]==1):
+                    thisDoesNotWork = True
+                    break
+                configurationCounter = configurationCounter + 1
+            #If no problems arise above, check to be sure there are no rows of all 1 (negative) or columns of all 2 (positive)
+            if not thisDoesNotWork:
+                for j in range(q):
+                    positive = False
+                    if matrixForm[0][j] == 2:
+                        positive = True
+                        for i in range(p):
+                            if matrixForm[i][j]==1 or matrixForm[i][j]==0:
+                                positive = False
+                                break
+                    if positive:
+                        thisDoesNotWork = True
+                        break
+                for i in range(p):
+                    negative = False
+                    if matrixForm[i][0] == 1:
+                        negative = True
+                        for j in range(q):
+                            if matrixForm[i][j]==2 or matrixForm[i][j]==0:
+                                negative = False
+                                break
+                        if negative:
+                            thisDoesNotWork = True
+                            break
+                #If no problems arise above, all this configuration to the list of configurations that work for this diskchoice
+                if not thisDoesNotWork:
+                    configurationsList.append(configuration)
+                    configurationsCount = configurationsCount + 1
     if len(configurationsList) > 0:
         file.write("Disk Choice: " + str(diskChoice)+ "\n")
         for workingConfiguration in configurationsList:
             file.write(str(workingConfiguration)+ "\n")
         count = count + 1
         file.write("\n")
-file.write("There are " + str(count)+ " disk choices that have working orientation configurations.")
+file.write("There are " + str(count)+ " disk choices that produce " + str(configurationsCount) + " possible configurations.")
 file.close()
 
 print("Runtime: " + str(datetime.now()-startTime))

@@ -12,3 +12,14 @@ allOverlap.dat
 data.dat
 .vscode/
 3,4_xyResults.dat
+3,4_xyResults_New_Isotopy
+3,4_xyResults_New_Isotopy_After_Constraints
+3,4_xyResults_New_Isotopy_FullGame
+3,4_xyResults_New_Isotopy_FullGame_Filtered
+3,5_xyResults_New_Isotopy_FullGame_Filtered
+3,6_xyResults_New_Isotopy_FullGame_Filtered
+4,4_xyResults_New_Isotopy_FullGame_Filtered
+4,5_xyResults_New_Isotopy_After_Constraints
+4,5_xyResults_New_Isotopy_After_Constraints_and_Filtered
+4,5_xyResults_New_Isotopy_FullGame_Filtered
+
